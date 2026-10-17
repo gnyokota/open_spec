@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Todo
 
-## Getting Started
+A todo app built with [Next.js](https://nextjs.org) (App Router) and TypeScript, planned and built change by change with [OpenSpec](https://github.com/Fission-AI/OpenSpec).
 
-First, run the development server:
+## Prerequisites
+
+- Node.js 22 (see `.nvmrc`; with nvm, run `nvm use`)
+- npm (comes with Node)
+
+## Setup
 
 ```bash
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script                 | What it does                                                         |
+| ---------------------- | -------------------------------------------------------------------- |
+| `npm run dev`          | Start the dev server (Turbopack) on port 3000                        |
+| `npm run build`        | Create a production build                                            |
+| `npm run start`        | Serve the production build (run `build` first)                       |
+| `npm run lint`         | Lint with ESLint (Next.js rules + Prettier compatibility)            |
+| `npm run format`       | Format all files with Prettier                                       |
+| `npm run format:check` | Check formatting without writing                                     |
+| `npm run typecheck`    | Generate Next.js route types, then type-check with `tsc --noEmit`    |
+| `npm run test`         | Run unit and component tests with Vitest                             |
+| `npm run test:e2e`     | Run end-to-end tests with Playwright (starts the dev server for you) |
 
-## Learn More
+CI (`.github/workflows/ci.yml`) runs `lint`, `format:check`, `typecheck`, `test`, `build`, and `test:e2e` on every push to `main` and every pull request.
 
-To learn more about Next.js, take a look at the following resources:
+## Project layout
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `src/app/`: routes, layouts, and global CSS (design tokens live in `globals.css`)
+- `tests/`: Vitest unit and component tests (`*.test.ts` / `*.test.tsx`, jsdom environment)
+- `e2e/`: Playwright end-to-end tests (`*.spec.ts`, Chromium)
+- `openspec/`: specs and change proposals
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Styling uses CSS Modules (`*.module.css` next to each component) plus CSS custom properties. There's no Tailwind.
 
-## Deploy on Vercel
+### Running e2e tests against a production build
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Locally, `npm run test:e2e` starts `npm run dev`. To test the production build the way CI does:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run build
+CI=1 npm run test:e2e
+```
+
+The first time, install the browser with `npx playwright install chromium`.
+
+## OpenSpec workflow
+
+Every change is planned before it's built:
+
+1. **`/opsx:propose <idea>`** creates a change in `openspec/changes/<name>/` with a proposal, specs, a design, and tasks.
+2. **`/opsx:apply <name>`** implements the tasks and checks them off.
+3. **`/opsx:archive <name>`** merges the change's specs into `openspec/specs/` and moves the change to `openspec/changes/archive/`.
+
+`/opsx:explore` is for thinking an idea through before proposing it.
