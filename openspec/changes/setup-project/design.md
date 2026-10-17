@@ -1,0 +1,62 @@
+## Context
+
+The repository root already contains `openspec/`, `.claude/`, and `.github/` (OpenSpec prompts, skills, and `workflows/copilot-setup-steps.yml`). It is not a git repository and has no `package.json`. The local toolchain is Node 22.14 and npm 11.4, and the global pnpm shim is broken. The current Next.js release is 16.4.2, which requires Node ≥20.9. See proposal.md for motivation and scope.
+
+## Goals / Non-Goals
+
+**Goals:**
+- A fresh clone works with `npm ci` and then `npm run dev`, and every check CI runs can be run locally with one npm script each.
+- Generated code follows current Next.js conventions, so later feature changes can follow the official docs directly.
+- Existing OpenSpec and agent files are left byte-for-byte unchanged, and formatters never touch them.
+
+**Non-Goals:**
+- Cross-browser e2e coverage. Chromium only for now.
+- Pre-commit hooks (husky/lint-staged). CI is the enforcement point. Hooks can be added later if wanted.
+- Coverage thresholds, bundle analysis, Docker, and deployment configuration.
+
+## Decisions
+
+**1. Scaffold with `create-next-app@16.4.2` into a temporary directory, then copy into the root.**
+create-next-app refuses a non-empty target directory, and `.claude/` and `openspec/` would trigger that. The plan is to run it in an OS temp directory with explicit flags: `--ts --app --src-dir --eslint --tailwind --import-alias "@/*" --use-npm --disable-git --agents-md --no-agent-feedback`. Then copy the output into the root, which must not overwrite existing paths. Finally, run `npm install` in the root so `package-lock.json` matches the new location.
+*Alternatives:* Hand-writing the scaffold drifts from upstream defaults and is easy to get subtly wrong. Moving the existing folders out, scaffolding, and moving them back risks losing OpenSpec files if something fails partway.
+
+**2. App Router, `src/` directory, `@/*` import alias, Turbopack (the Next 16 default).**
+The App Router is the current recommended model. `src/` separates app code from root-level config and the `openspec/` tree.
+
+**3. npm as the package manager.**
+npm already works locally, `copilot-setup-steps.yml` already uses npm, and CI gets it with no extra setup step. The pnpm install on this machine is broken.
+
+**4. Tailwind CSS (the create-next-app default).**
+It costs little now and avoids a separate styling decision in the first UI change.
+*Alternative:* plain CSS Modules. That remains possible later, since Tailwind does not lock components in.
+
+**5. ESLint for linting, Prettier for formatting, kept separate.**
+Use the flat `eslint.config.mjs` that create-next-app generates (`next/core-web-vitals` + `next/typescript`), plus `eslint-config-prettier` so the two tools never disagree, and `prettier-plugin-tailwindcss` to order classes. `.prettierignore` excludes `openspec/`, `.claude/`, `.github/prompts/`, `.github/skills/`, `.github/agents/`, and build output, so OpenSpec-generated files never churn.
+*Alternative:* Biome, which is faster and is one tool. It was rejected because its Next.js lint rule coverage is narrower and most Next.js docs and examples assume ESLint.
+
+**6. Strict TypeScript, with a separate `typecheck` script (`tsc --noEmit`).**
+`next build` type-checks too, but a separate script gives faster, clearer failures in CI and in editors.
+
+**7. Vitest + React Testing Library + jsdom for unit/component tests, Playwright for e2e.**
+Vitest uses `@vitejs/plugin-react` and `vite-tsconfig-paths` so `@/*` resolves the same way as in Next. Unit tests live in `tests/`. A setup file loads `@testing-library/jest-dom`. Async Server Components can't be unit-tested in jsdom, so they are covered by Playwright. Playwright tests live in `e2e/`, run Chromium only, and start the app through `webServer`: `npm run dev` locally, and `npm run start` in CI (when `process.env.CI` is set), so CI tests the production build that the earlier `build` step produced. `reuseExistingServer` is on locally and off in CI.
+*Alternative:* Jest. It needs more configuration for ESM/TS and is slower, and Vitest is the common choice for new Next projects.
+
+**8. Smoke tests target a stable element of the placeholder page.**
+The scaffold's home page is replaced with a minimal page with a "Todo" `<h1>`. A Vitest test renders it and a Playwright test visits `/`. Both check that heading, so the tests don't depend on create-next-app's marketing markup.
+
+**9. CI in `.github/workflows/ci.yml` on push to `main` and on all pull requests.**
+It is one job on `ubuntu-latest`. `actions/setup-node` reads `.nvmrc` (Node 22) with npm caching. The steps run in fail-fast order: `npm ci` → `lint` → `format:check` → `typecheck` → `test` → `build` → `npx playwright install --with-deps chromium` → `test:e2e`. The Playwright HTML report is uploaded as an artifact on failure. `copilot-setup-steps.yml` stays separate and unchanged.
+
+**10. Node version pinned to 22 LTS** via `.nvmrc` and `"engines": { "node": ">=22" }`. This matches the local install and is above Next 16's minimum.
+
+## Risks / Trade-offs
+
+- [create-next-app flags or defaults change between versions] → Pin `create-next-app@16.4.2` in the task, and check the generated `package.json` before copying.
+- [The copy step overwrites an existing file (e.g. `.gitignore` or `README.md`)] → Neither exists today. The copy must be no-clobber, and any collision is reported instead of overwritten.
+- [`--agents-md` creates `AGENTS.md` (and possibly `CLAUDE.md`), overlapping with the OpenSpec agent setup] → Keep `AGENTS.md`, since it holds version-accurate Next.js guidance. If a `CLAUDE.md` is generated, keep it only if no conflicting file exists.
+- [Playwright browser download makes CI slower] → Only Chromium is installed, and npm caching covers the dependencies. Browser caching can be added later if needed.
+- [Running e2e locally with `npm run dev` doesn't test the production build] → CI runs e2e against `npm run start`. Developers can do the same with `CI=1 npm run test:e2e` after `npm run build`.
+
+## Migration Plan
+
+This is greenfield work with no existing behavior to migrate. Rollback means deleting the generated files. Because git is initialized as part of this change, the first commit records the clean OpenSpec-only state before the scaffold is added. That keeps the rollback point explicit.
