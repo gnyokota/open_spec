@@ -1,0 +1,16 @@
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 4rem 1rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.875rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}

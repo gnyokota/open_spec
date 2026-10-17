@@ -1,0 +1,20 @@
+# OpenSpec- and agent-generated files: never reformat
+openspec/
+.claude/
+.github/prompts/
+.github/skills/
+.github/agents/
+.github/workflows/copilot-setup-steps.yml
+AGENTS.md
+
+# Build and test output
+.next/
+out/
+build/
+coverage/
+playwright-report/
+test-results/
+blob-report/
+next-env.d.ts
+
+package-lock.json

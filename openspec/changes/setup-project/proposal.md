@@ -5,6 +5,7 @@ The repository has OpenSpec and agent tooling but no application code. Every tod
 ## What Changes
 
 - Scaffold a Next.js (App Router) + TypeScript application at the repository root, alongside the existing `openspec/`, `.claude/`, and `.github/` directories, without changing them.
+- Use plain CSS with CSS Modules for styling. Tailwind, which create-next-app adds by default, is removed.
 - Configure strict TypeScript, ESLint (Next.js config), and Prettier, with npm scripts for `dev`, `build`, `start`, `lint`, `format`, `format:check`, `typecheck`, `test`, and `test:e2e`.
 - Add Vitest + React Testing Library for unit/component tests and Playwright for end-to-end tests, each with one smoke test of the placeholder home page.
 - Add a GitHub Actions CI workflow that installs, lints, checks formatting, type-checks, tests, builds, and runs the e2e smoke test on pushes and pull requests.
