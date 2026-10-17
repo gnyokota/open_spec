@@ -30,6 +30,6 @@
 
 ## 6. Documentation and project context
 
-- [ ] 6.1 Write `README.md` covering prerequisites (Node 22, npm), setup, every npm script, the test layout (`tests/` vs `e2e/`), and a short section on the OpenSpec workflow (`/opsx:propose` → `/opsx:apply` → `/opsx:archive`). Verify that every script named in the README exists in `package.json`.
+- [x] 6.1 Write `README.md` covering prerequisites (Node 22, npm), setup, every npm script, the test layout (`tests/` vs `e2e/`), and a short section on the OpenSpec workflow (`/opsx:propose` → `/opsx:apply` → `/opsx:archive`). Verify that every script named in the README exists in `package.json`.
 - [x] 6.2 Fill in the `context` field in `openspec/config.yaml` with the stack and conventions (Next.js 16 App Router + TypeScript strict, `src/` layout, CSS Modules + CSS custom properties (no Tailwind), npm, ESLint + Prettier, Vitest in `tests/`, Playwright in `e2e/`, persistence not yet chosen). Verify that `openspec instructions proposal --change setup-project --json` shows the new context.
 - [x] 6.3 Commit the scaffold. Verify that `openspec validate setup-project` passes and `git status` is clean.
