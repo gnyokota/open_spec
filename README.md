@@ -2,6 +2,13 @@
 
 A todo app built with [Next.js](https://nextjs.org) (App Router) and TypeScript, planned and built change by change with [OpenSpec](https://github.com/Fission-AI/OpenSpec).
 
+## Features
+
+- Add todos with an optional date. Blank todos are rejected.
+- Check a todo to mark it done, which strikes it through. Uncheck it to undo.
+- Todos and their checked state are saved in the browser (localStorage) and survive a reload.
+- Light and dark themes. The first visit follows your system setting, and the toggle in the header switches themes and remembers your choice.
+
 ## Prerequisites
 
 - Node.js 22 (see `.nvmrc`; with nvm, run `nvm use`)

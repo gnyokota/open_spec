@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { InlineScript } from "@/components/InlineScript/InlineScript";
+import { themeInitScript } from "@/lib/theme";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,7 +22,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    // The theme script sets data-theme before React hydrates.
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <InlineScript html={themeInitScript} />
+      </head>
       <body>{children}</body>
     </html>
   );

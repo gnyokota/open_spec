@@ -1,12 +1,81 @@
+/*
+ * Design tokens. Component modules use only these variables for color,
+ * padding, and margin. Themes override color tokens only.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  /* Colors (light) */
+  --color-bg: #f7f7f8;
+  --color-surface: #ffffff;
+  --color-text: #18181b;
+  --color-text-muted: #52525b;
+  --color-border: #e4e4e7;
+  --color-border-strong: #71717a;
+  --color-accent: #4f46e5;
+  --color-accent-hover: #4338ca;
+  --color-accent-contrast: #ffffff;
+  --color-danger: #b91c1c;
+  --color-focus: #4f46e5;
+
+  /* Spacing scale: used for every padding, margin, and gap */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-16: 4rem;
+
+  /* Semantic spacing aliases */
+  --padding-control: var(--space-2) var(--space-3);
+  --padding-card: var(--space-4);
+  --padding-page: var(--space-16) var(--space-4);
+  --margin-section: var(--space-6);
+
+  /* Shape and type */
+  --radius: 0.5rem;
+  --border-width: 1px;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-xl: 1.875rem;
+  --content-width: 42rem;
+  --focus-ring: 2px solid var(--color-focus);
+  --focus-offset: 2px;
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-bg: #0f0f12;
+  --color-surface: #1b1b20;
+  --color-text: #f4f4f5;
+  --color-text-muted: #a1a1aa;
+  --color-border: #2e2e35;
+  --color-border-strong: #8b8b94;
+  --color-accent: #818cf8;
+  --color-accent-hover: #a5b4fc;
+  --color-accent-contrast: #0f0f12;
+  --color-danger: #f87171;
+  --color-focus: #a5b4fc;
+}
+
+/* Fallback when the theme script could not run: follow the system. Keep in sync with the block above. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --color-bg: #0f0f12;
+    --color-surface: #1b1b20;
+    --color-text: #f4f4f5;
+    --color-text-muted: #a1a1aa;
+    --color-border: #2e2e35;
+    --color-border-strong: #8b8b94;
+    --color-accent: #818cf8;
+    --color-accent-hover: #a5b4fc;
+    --color-accent-contrast: #0f0f12;
+    --color-danger: #f87171;
+    --color-focus: #a5b4fc;
   }
 }
 
@@ -23,9 +92,15 @@ body {
 body {
   display: flex;
   flex-direction: column;
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-bg);
+  color: var(--color-text);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-size: var(--font-size-md);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
 }

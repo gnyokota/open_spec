@@ -3,14 +3,22 @@
   flex: 1;
   flex-direction: column;
   width: 100%;
-  max-width: 42rem;
+  max-width: var(--content-width);
   margin: 0 auto;
-  padding: 4rem 1rem;
+  padding: var(--padding-page);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin: 0 0 var(--margin-section);
 }
 
 .title {
   margin: 0;
-  font-size: 1.875rem;
+  font-size: var(--font-size-xl);
   font-weight: 600;
   letter-spacing: -0.025em;
 }

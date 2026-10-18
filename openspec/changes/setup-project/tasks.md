@@ -15,18 +15,6 @@
 - [x] 3.2 Install `prettier`, `eslint-config-prettier`, and `prettier-plugin-tailwindcss`. Add a Prettier config and a `.prettierignore` (excluding `openspec/`, `.claude/`, `.github/prompts/`, `.github/skills/`, `.github/agents/`, `.next/`, `playwright-report/`, `test-results/`, and `package-lock.json`), extend `eslint.config.mjs` with `eslint-config-prettier`, and add the `format` and `format:check` scripts. Verify that `npm run format` and then `npm run format:check` and `npm run lint` all exit 0, and that `git status` shows no changes under the ignored directories.
 - [x] 3.3 Remove Tailwind: uninstall `tailwindcss`, `@tailwindcss/turbopack`, and `prettier-plugin-tailwindcss`. Remove the Turbopack `*.css` loader rule from `next.config.ts`, the `@import "tailwindcss"` and `@theme` blocks from `src/app/globals.css`, and the plugin settings from `.prettierrc.json`. Replace the utility classes in `src/app/layout.tsx` and `src/app/page.tsx` with a `page.module.css` and plain global body styles. Verify that `grep -ri tailwind src next.config.ts .prettierrc.json package.json` finds nothing, and that `npm run build`, `npm run lint`, and `npm run format:check` exit 0 and `/` still renders the "Todo" heading.
 
-## 4. Testing
-
-- [x] 4.1 Raise `@types/node` to `^22` (required by Vitest 5), then install `vitest`, `@vitejs/plugin-react`, `jsdom`, `@testing-library/react`, `@testing-library/dom`, and `@testing-library/jest-dom`. Add `vitest.config.mts` (ESM; `resolve.tsconfigPaths: true` for the `@/*` alias, jsdom environment, setup file loading jest-dom, `include: ["tests/**/*.test.{ts,tsx}"]`) and a `"test": "vitest run"` script. Verify that the config loads with `npx vitest run --passWithNoTests`.
-- [x] 4.2 Add `tests/home.test.tsx`, which renders the home page and checks for a heading named "Todo". Verify that `npm run test` passes, and that it fails if the heading text is changed temporarily.
-- [x] 4.3 Install `@playwright/test`, run `npx playwright install chromium`, and add `playwright.config.ts` (Chromium only, `testDir: "e2e"`, `baseURL` `http://localhost:3000`, `webServer` running `npm run dev` locally and `npm run start` when `CI` is set, `reuseExistingServer: !process.env.CI`). Add a `"test:e2e": "playwright test"` script. Verify that `npx playwright test --list` loads the config.
-- [x] 4.4 Add `e2e/home.spec.ts`, which visits `/` and checks that the "Todo" heading is visible. Verify that `npm run test:e2e` passes locally, and after `npm run build`, with `CI=1 npm run test:e2e`.
-- [x] 4.5 Add `playwright-report/`, `test-results/`, and `/blob-report/` to `.gitignore`, and make sure `.next/`, `node_modules/`, and `.env*.local` are already ignored. Verify that `git status` lists no build or test output after running all scripts.
-
-## 5. Continuous integration
-
-- [x] 5.1 Add `.github/workflows/ci.yml`. It triggers on push to `main` and on `pull_request`, runs on `ubuntu-latest`, uses `actions/setup-node` with `node-version-file: .nvmrc` and npm cache, and runs these steps in order: `npm ci`, `npm run lint`, `npm run format:check`, `npm run typecheck`, `npm run test`, `npm run build`, `npx playwright install --with-deps chromium`, `npm run test:e2e`. It uploads `playwright-report/` on failure. Verify that the YAML parses (e.g. `npx yaml-lint` or `actionlint` if available) and that `copilot-setup-steps.yml` is unchanged.
-- [x] 5.2 Run the full CI sequence locally, from a clean `npm ci` (with `CI=1` for the e2e step). Verify that every step exits 0.
 
 ## 6. Documentation and project context
 
