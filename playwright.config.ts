@@ -14,8 +14,9 @@ export default defineConfig({
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
-    // CI runs against the production build produced by the earlier `build` step.
-    command: isCI ? "npm run start" : "npm run dev",
+    // CI serves the static export (out/) produced by the earlier `build` step;
+    // `next start` does not work with `output: "export"`.
+    command: isCI ? "npx serve out -l 3000" : "npm run dev",
     url: "http://localhost:3000",
     reuseExistingServer: !isCI,
     timeout: 120_000,

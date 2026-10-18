@@ -2,7 +2,7 @@ schema: spec-driven
 
 context: |
   Product: a todo list web app.
-  Tech stack: Next.js 16 (App Router, Turbopack, cacheComponents enabled), React 19,
+  Tech stack: Next.js 16 (App Router, Turbopack, static export via output: "export"; cacheComponents off), React 19,
   TypeScript (strict). Source lives under src/ with the @/* import alias.
   Styling: CSS Modules (*.module.css co-located with components) plus CSS custom
   properties defined in src/app/globals.css. No Tailwind.
@@ -10,6 +10,7 @@ context: |
   Quality: ESLint (eslint-config-next + eslint-config-prettier) and Prettier.
   Tests: Vitest + React Testing Library (jsdom) in tests/; Playwright (Chromium) in e2e/.
   CI: GitHub Actions runs lint, format:check, typecheck, test, build, test:e2e.
+  Hosting: GitHub Pages at /open_spec/ (pages.yml deploys every push to main; basePath from PAGES_BASE_PATH). No server features.
   Persistence: no server database yet; browser localStorage only.
 
 # Project context (optional)

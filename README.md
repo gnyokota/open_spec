@@ -28,8 +28,8 @@ Then open http://localhost:3000.
 | Script                 | What it does                                                         |
 | ---------------------- | -------------------------------------------------------------------- |
 | `npm run dev`          | Start the dev server (Turbopack) on port 3000                        |
-| `npm run build`        | Create a production build                                            |
-| `npm run start`        | Serve the production build (run `build` first)                       |
+| `npm run build`        | Build the static export into `out/`                                  |
+| `npx serve out`        | Serve the static export locally (`next start` doesn't support it)    |
 | `npm run lint`         | Lint with ESLint (Next.js rules + Prettier compatibility)            |
 | `npm run format`       | Format all files with Prettier                                       |
 | `npm run format:check` | Check formatting without writing                                     |
@@ -38,6 +38,15 @@ Then open http://localhost:3000.
 | `npm run test:e2e`     | Run end-to-end tests with Playwright (starts the dev server for you) |
 
 CI (`.github/workflows/ci.yml`) runs `lint`, `format:check`, `typecheck`, `test`, `build`, and `test:e2e` on every push to `main` and every pull request.
+
+## Deployment
+
+The app is live at **https://gnyokota.github.io/open_spec/**.
+
+- **Automatic:** every push to `main` runs `.github/workflows/pages.yml`, which builds the site and deploys it to GitHub Pages. You can also start it by hand from the repository's **Actions** tab ("Deploy to GitHub Pages" → **Run workflow**).
+- **Static export:** `next.config.ts` sets `output: "export"`, so `npm run build` writes plain HTML/CSS/JS to `out/`. The workflow sets `PAGES_BASE_PATH` (e.g. `/open_spec`) so asset URLs work under the project path. Locally and in CI it's unset, and the app runs at `/`. Static export doesn't support Cache Components, so it's turned off.
+- **Data:** todos and the theme live in each visitor's browser (localStorage), so nothing is stored on the server.
+- **Roll back:** revert the bad commit on `main` (the push redeploys), or open an earlier successful "Deploy to GitHub Pages" run and choose **Re-run all jobs**. To take the site down, go to **Settings → Pages** and unpublish it.
 
 ## Project layout
 
