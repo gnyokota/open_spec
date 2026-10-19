@@ -52,6 +52,9 @@ The app is live at **https://gnyokota.github.io/open_spec/**.
 
 - `src/app/`: routes, layouts, and global CSS (design tokens live in `globals.css`)
 - `tests/`: Vitest unit and component tests (`*.test.ts` / `*.test.tsx`, jsdom environment)
+  - `tests/lib/`: the todo store, date, and theme logic in `src/lib/`
+  - `tests/components/` and `tests/app/`: rendered components and the home page
+  - `tests/setup.ts`: loads the jest-dom matchers and, after each test, clears `localStorage`, the todo store, and the theme attribute, so tests don't affect each other
 - `e2e/`: Playwright end-to-end tests (`*.spec.ts`, Chromium)
 - `openspec/`: specs and change proposals
 

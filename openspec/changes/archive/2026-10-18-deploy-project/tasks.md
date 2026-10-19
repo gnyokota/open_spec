@@ -23,9 +23,9 @@
 
 ## 4. Enable and deploy
 
-- [ ] 4.1 **Owner step:** in GitHub, open `gnyokota/open_spec` → Settings → Pages → Build and deployment → Source, and choose **GitHub Actions**. Verify that the setting shows "GitHub Actions".
-- [ ] 4.2 Commit and push the changes to `main`. Verify that the "Deploy to GitHub Pages" run succeeds (both jobs green), the "CI" run for the same commit is green, and the `github-pages` environment shows the URL `https://gnyokota.github.io/open_spec/`.
-- [ ] 4.3 Open `https://gnyokota.github.io/open_spec/`. Verify:
+- [x] 4.1 **Owner step:** in GitHub, open `gnyokota/open_spec` → Settings → Pages → Build and deployment → Source, and choose **GitHub Actions**. Verify that the setting shows "GitHub Actions".
+- [x] 4.2 Commit and push the changes to `main`. Verify that the "Deploy to GitHub Pages" run succeeds (both jobs green), the "CI" run for the same commit is green, and the `github-pages` environment shows the URL `https://gnyokota.github.io/open_spec/`.
+- [x] 4.3 Open `https://gnyokota.github.io/open_spec/`. Verify:
   - the page loads with styles and fonts, and the browser's network tab shows no 404s
   - adding a todo works with the button and with Enter
   - checking a todo strikes it through
