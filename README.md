@@ -56,6 +56,9 @@ The app is live at **https://gnyokota.github.io/open_spec/**.
   - `tests/components/` and `tests/app/`: rendered components and the home page
   - `tests/setup.ts`: loads the jest-dom matchers and, after each test, clears `localStorage`, the todo store, and the theme attribute, so tests don't affect each other
 - `e2e/`: Playwright end-to-end tests (`*.spec.ts`, Chromium)
+  - `e2e/todo.spec.ts`: adding, rejecting, listing, checking, and saving todos, including dates in other time zones and blocked or corrupted storage
+  - `e2e/theme.spec.ts`: the system default, the toggle, the remembered choice, the theme applied before the app's JavaScript runs, and text contrast in both themes
+  - `e2e/helpers.ts`: shared steps (adding a todo, seeding or blocking storage, measuring contrast)
 - `openspec/`: specs and change proposals
 
 Styling uses CSS Modules (`*.module.css` next to each component) plus CSS custom properties. There's no Tailwind.
@@ -70,6 +73,8 @@ CI=1 npm run test:e2e
 ```
 
 The first time, install the browser with `npx playwright install chromium`.
+
+To run one file, use `npx playwright test e2e/theme.spec.ts`. After a run, open the HTML report with `npx playwright show-report` (CI uploads it as the `playwright-report` artifact when tests fail).
 
 ## OpenSpec workflow
 
